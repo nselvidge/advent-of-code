@@ -40,21 +40,12 @@ pub fn sliding_window_measurement() -> String {
   String::from(format!("{}", count))
 }
 
-fn get_day_one_data() -> std::iter::Map<
-  std::io::Lines<std::io::BufReader<std::fs::File>>,
-  fn(std::result::Result<std::string::String, std::io::Error>) -> u32,
-> {
+fn get_day_one_data() -> impl Iterator<Item = u32> {
   let path = Path::new("data/day_one_data.txt");
-  println!("{:?}", path);
-  let file = File::open(path).expect("File not found");
-  io::BufReader::new(file).lines().map(line_to_int)
-}
-
-fn line_to_int(line: Result<String, std::io::Error>) -> u32 {
-  line
-    .expect("could not read line")
-    .parse()
-    .expect("could not parse line into integer")
+  let file = File::open(path).unwrap();
+  io::BufReader::new(file)
+    .lines()
+    .map(|line| -> u32 { line.unwrap().parse().unwrap() })
 }
 
 struct NumberQueue {
